@@ -1,1 +1,194 @@
 @import "tailwindcss";
+
+/* DOS Terminal Base Styles */
+:root {
+  --dos-green: #00ff41;
+  --dos-green-dim: #00aa2a;
+  --dos-green-bright: #39ff14;
+  --dos-bg: #000000;
+  --dos-scanline: rgba(0, 0, 0, 0.15);
+  --crt-glow: 0 0 10px rgba(0, 255, 65, 0.5), 0 0 20px rgba(0, 255, 65, 0.3), 0 0 40px rgba(0, 255, 65, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background: #000;
+  color: var(--dos-green);
+  font-family: 'Courier New', Courier, monospace;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* CRT Screen Effect */
+.crt-screen {
+  position: relative;
+  background: var(--dos-bg);
+  overflow: hidden;
+}
+
+/* Scanlines overlay */
+.crt-screen::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* CRT vignette + flicker */
+.crt-screen::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 60%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  pointer-events: none;
+  z-index: 9997;
+  animation: crt-flicker 0.15s infinite;
+}
+
+@keyframes crt-flicker {
+  0%   { opacity: 1; }
+  92%  { opacity: 1; }
+  93%  { opacity: 0.97; }
+  94%  { opacity: 1; }
+  96%  { opacity: 0.98; }
+  100% { opacity: 1; }
+}
+
+/* Text glow */
+.dos-text {
+  color: var(--dos-green);
+  text-shadow: var(--crt-glow);
+}
+
+.dos-text-dim {
+  color: var(--dos-green-dim);
+  text-shadow: 0 0 5px rgba(0, 170, 42, 0.4);
+}
+
+.dos-text-bright {
+  color: var(--dos-green-bright);
+  text-shadow: 0 0 15px rgba(57, 255, 20, 0.8), 0 0 30px rgba(57, 255, 20, 0.4);
+}
+
+/* Cursor blink */
+@keyframes cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: cursor-blink 1s step-end infinite;
+}
+
+/* Typing animation */
+@keyframes type-in {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+/* Screen turn-on effect */
+@keyframes screen-on {
+  0% {
+    transform: scaleY(0.001) scaleX(1);
+    filter: brightness(10);
+  }
+  30% {
+    transform: scaleY(0.01) scaleX(1);
+    filter: brightness(5);
+  }
+  60% {
+    transform: scaleY(1) scaleX(1);
+    filter: brightness(2);
+  }
+  100% {
+    transform: scaleY(1) scaleX(1);
+    filter: brightness(1);
+  }
+}
+
+.screen-boot {
+  animation: screen-on 0.6s ease-out forwards;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--dos-green-dim);
+  border: 1px solid var(--dos-green);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--dos-green);
+}
+
+/* Selection */
+::selection {
+  background: var(--dos-green);
+  color: #000;
+}
+
+/* Input reset */
+input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--dos-green);
+  font-family: 'Courier New', Courier, monospace;
+  caret-color: var(--dos-green);
+}
+
+/* Box drawing characters helper */
+.dos-box {
+  border: 1px solid var(--dos-green);
+  box-shadow: 0 0 8px rgba(0, 255, 65, 0.3), inset 0 0 8px rgba(0, 255, 65, 0.05);
+}
+
+/* Progress bar animation */
+@keyframes progress-fill {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* Glitch effect */
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+.glitch {
+  animation: glitch 0.3s ease-in-out;
+}
