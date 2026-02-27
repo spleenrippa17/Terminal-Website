@@ -563,6 +563,9 @@ export default function Terminal() {
       onClick={handleScreenClick}
       style={{ fontFamily: "'Courier New', Courier, monospace" }}
     >
+      {/* Moving scanline sweep — drifts down the screen like a CRT refresh beam */}
+      <div className="crt-scanline-sweep" aria-hidden="true" />
+
       {/* Terminal output area */}
       <div
         className="flex-1 overflow-y-auto p-4 pb-2"

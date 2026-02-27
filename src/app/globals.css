@@ -247,3 +247,109 @@ input {
   text-shadow: 0 0 6px rgba(0, 170, 42, 0.5);
   font-style: italic;
 }
+
+/* ─── Enhanced CRT Effects ─────────────────────────────────────── */
+
+/*
+ * 1. MOVING SCANLINE SWEEP
+ * A bright horizontal band that drifts down the screen periodically,
+ * simulating the visible refresh sweep of a CRT monitor.
+ */
+@keyframes scanline-sweep {
+  0%   { top: -4%; opacity: 0; }
+  2%   { opacity: 1; }
+  98%  { opacity: 1; }
+  100% { top: 104%; opacity: 0; }
+}
+
+.crt-screen .crt-scanline-sweep {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 255, 65, 0.06) 40%,
+    rgba(0, 255, 65, 0.10) 50%,
+    rgba(0, 255, 65, 0.06) 60%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 9999;
+  animation: scanline-sweep 8s linear infinite;
+}
+
+/*
+ * 2. CSS SKEW WARP — Periodic screen geometry drift
+ * Simulates a CRT's geometry drifting slightly over time.
+ * Very subtle skewX pulses on a long cycle so it feels organic.
+ */
+@keyframes crt-skew-warp {
+  0%,  88%, 100% { transform: skewX(0deg)   skewY(0deg); }
+  89%            { transform: skewX(0.25deg) skewY(0deg); }
+  90%            { transform: skewX(-0.15deg) skewY(0.05deg); }
+  91%            { transform: skewX(0.1deg)  skewY(-0.03deg); }
+  92%            { transform: skewX(0deg)    skewY(0deg); }
+}
+
+/*
+ * 3. CHROMATIC ABERRATION — RGB channel fringing
+ * Adds subtle red/blue ghost offsets to all glowing text,
+ * simulating the RGB phosphor misalignment of a real CRT.
+ */
+.dos-text {
+  color: var(--dos-green);
+  text-shadow:
+    -1px 0   rgba(255, 0,   0,   0.12),
+     1px 0   rgba(0,   0,   255, 0.10),
+    var(--crt-glow);
+}
+
+.dos-text-bright {
+  color: var(--dos-green-bright);
+  text-shadow:
+    -1px 0   rgba(255, 0,   0,   0.18),
+     1px 0   rgba(0,   0,   255, 0.15),
+    0 0 15px rgba(57, 255, 20, 0.8),
+    0 0 30px rgba(57, 255, 20, 0.4);
+}
+
+/*
+ * 4. VERTICAL HOLD ROLL — Occasional vertical sync loss
+ * The whole screen content briefly slips vertically, then snaps back,
+ * like a CRT losing its vertical hold lock for a fraction of a second.
+ */
+@keyframes vhold-roll {
+  0%,  93%, 100% { transform: translateY(0px); }
+  94%            { transform: translateY(-5px); }
+  95%            { transform: translateY(3px); }
+  96%            { transform: translateY(-2px); }
+  97%            { transform: translateY(1px); }
+}
+
+/*
+ * The skew-warp and vhold-roll both target .crt-screen transform.
+ * We combine them into a single animation list so they don't cancel
+ * each other out (CSS only allows one animation per property).
+ */
+@keyframes crt-combined {
+  /* ── skew warp window: 88–92 % ── */
+  0%,  87.9%, 92.1%, 100% {
+    transform: skewX(0deg) skewY(0deg) translateY(0px);
+  }
+  89% { transform: skewX(0.25deg)  skewY(0deg)    translateY(0px); }
+  90% { transform: skewX(-0.15deg) skewY(0.05deg) translateY(0px); }
+  91% { transform: skewX(0.1deg)   skewY(-0.03deg) translateY(0px); }
+
+  /* ── vhold roll window: 93–97 % ── */
+  94% { transform: skewX(0deg) skewY(0deg) translateY(-5px); }
+  95% { transform: skewX(0deg) skewY(0deg) translateY(3px); }
+  96% { transform: skewX(0deg) skewY(0deg) translateY(-2px); }
+  97% { transform: skewX(0deg) skewY(0deg) translateY(1px); }
+}
+
+/* Override the earlier single-animation rule with the combined one */
+.crt-screen {
+  animation: crt-combined 18s ease-in-out infinite;
+}

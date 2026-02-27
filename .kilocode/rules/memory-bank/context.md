@@ -2,7 +2,7 @@
 
 ## Current State
 
-**Project Status**: ✅ CORE terminal — Alien/Weyland-Yutani theme implemented
+**Project Status**: ✅ CORE terminal — Enhanced CRT effects implemented
 
 The site is a fully functional CORE (Corporate Operations Resource Engine) terminal experience themed after the Alien/Aliens films. Features CRT effects, a command parser, retro sounds, and navigable page hierarchy set in the year 2303.
 
