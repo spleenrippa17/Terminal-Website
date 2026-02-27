@@ -315,7 +315,7 @@ export const siteTree: SitePage[] = [
       'Type BACK to return to the previous menu.',
     ],
     image: {
-      src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/IBM_PC_5150.jpg/640px-IBM_PC_5150.jpg',
+      src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/IBM_PC_5150.jpg/960px-IBM_PC_5150.jpg',
       alt: 'IBM PC 5150 - the original IBM Personal Computer',
       caption: 'IBM PC 5150 (1981) — the machine that started it all.',
     },
