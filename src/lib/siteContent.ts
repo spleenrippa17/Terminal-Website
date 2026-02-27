@@ -1,387 +1,88 @@
 /**
- * Site content hierarchy for the CORE terminal navigation system
+ * Site navigation index for the CORE terminal.
  * Corporate Operations Resource Engine — Weyland-Yutani Corporation
- * Each page has an id, title, content lines, and optional children
+ *
+ * This file defines the navigation tree ONLY — titles, descriptions, and
+ * hierarchy. Actual page content lives in src/content/<id>.md files and
+ * is loaded on demand via the /api/content/[...slug] API route.
+ *
+ * To add a new page:
+ *   1. Add an entry here (with optional children array for sub-pages)
+ *   2. Create src/content/<id>.md with frontmatter + body text
  */
 
-export interface SitePage {
+export interface NavPage {
+  /** Unique path id, e.g. "about" or "about/history" */
   id: string;
+  /** Display title shown in DIR listings and prompts */
   title: string;
+  /** One-line description shown in DIR listings */
   shortDesc: string;
-  content: string[];
-  /** Optional image shown below the text content. Will have CRT filter applied automatically. */
-  image?: {
-    src: string;
-    alt: string;
-    caption?: string;
-  };
-  children?: SitePage[];
+  /** Child pages navigable via CD */
+  children?: NavPage[];
 }
 
-export const siteTree: SitePage[] = [
+export const siteTree: NavPage[] = [
   {
-    id: 'home',
-    title: 'HOME',
-    shortDesc: 'System welcome screen',
-    content: [
-      '╔══════════════════════════════════════════════════════════════╗',
-      '║         WEYLAND-YUTANI CORPORATION — CORE TERMINAL          ║',
-      '║         Corporate Operations Resource Engine v9.1           ║',
-      '║                  *** SYSTEM ONLINE ***                      ║',
-      '╚══════════════════════════════════════════════════════════════╝',
-      '',
-      'AUTHORIZATION CONFIRMED. WELCOME, OPERATIVE.',
-      '',
-      'You are connected to the CORE mainframe network.',
-      'All sessions are monitored and logged per Standing Order 937.',
-      '',
-      'SYSTEM STATUS:',
-      '  [OK] Primary memory banks: NOMINAL',
-      '  [OK] Hypersleep monitoring: ACTIVE — 72 units in stasis',
-      '  [OK] Atmospheric processors: NOMINAL',
-      '  [OK] Uplink to Gateway Station: CONNECTED',
-      '  [OK] Science division sub-routines: RUNNING',
-      '',
-      'CURRENT STARDATE: 2303.02.27  //  SHIP TIME: SYNCHRONIZED',
-      '',
-      'Type HELP for a list of available commands.',
-      'Type DIR to see available sections.',
-      '',
-      '──────────────────────────────────────────────────────────────',
-      '"Building Better Worlds."',
-      '                         — Weyland-Yutani Corporation, 2099',
-    ],
-    children: [],
+    id: "home",
+    title: "HOME",
+    shortDesc: "System welcome screen",
   },
   {
-    id: 'about',
-    title: 'ABOUT',
-    shortDesc: 'About the CORE system',
-    content: [
-      '╔══════════════════════════════════════════════════════════════╗',
-      '║                    ABOUT CORE v9.1                          ║',
-      '╚══════════════════════════════════════════════════════════════╝',
-      '',
-      'CORPORATE OPERATIONS RESOURCE ENGINE (CORE)',
-      '',
-      'CORE is the primary command-and-control operating system',
-      'deployed across all Weyland-Yutani deep-space installations,',
-      'colony ships, and orbital platforms.',
-      '',
-      'TECHNICAL SPECIFICATIONS:',
-      '  Platform  : Hyperdyne Systems 120-A/2 mainframe',
-      '  OS        : CORE v9.1 (build 2303.01.14)',
-      '  Display   : Monochrome phosphor, 80x25 text mode',
-      '  Memory    : 256 TB primary / 4 PB cold storage',
-      '  Uplink    : Tachyon burst relay, 0.3c effective',
-      '  AI Class  : Non-Synthetic (human-supervised)',
-      '',
-      'ABOUT THIS INSTALLATION:',
-      '  This terminal provides authorized personnel with access',
-      '  to mission data, personnel records, and operational',
-      '  directives. Unauthorized access is a violation of',
-      '  ICC Regulation 7.4 and will be prosecuted.',
-      '',
-      'VERSION HISTORY:',
-      '  v7.0  2289-03-15  Initial deep-space deployment',
-      '  v8.0  2295-07-22  Synthetic integration protocols added',
-      '  v9.0  2301-11-01  Special Order handling upgraded',
-      '  v9.1  2303-01-14  Current release — security hardened',
-      '',
-      'Type BACK to return to the previous menu.',
-    ],
+    id: "about",
+    title: "ABOUT",
+    shortDesc: "About the CORE system",
     children: [
       {
-        id: 'about/history',
-        title: 'HISTORY',
-        shortDesc: 'CORE system history',
-        content: [
-          '╔══════════════════════════════════════════════════════════════╗',
-          '║                   SYSTEM HISTORY                            ║',
-          '╚══════════════════════════════════════════════════════════════╝',
-          '',
-          'THE HISTORY OF CORE',
-          '',
-          '2099 — Peter Weyland founds Weyland Corp.',
-          '       First prototype AI assistant designated MU/TH/UR 1000.',
-          '       Deployed aboard the USCSS Prometheus.',
-          '',
-          '2179 — Incident at LV-426 (Hadley\'s Hope colony).',
-          '       CORE v4.2 aboard USS Sulaco executes Special Order 937.',
-          '       All mission data classified. Access level: RESTRICTED.',
-          '',
-          '2183 — Post-incident review leads to CORE v5.0 overhaul.',
-          '       Enhanced containment protocols added.',
-          '       Synthetic oversight subroutines expanded.',
-          '',
-          '2250 — Merger of Weyland Corp and Yutani Corporation.',
-          '       CORE rebranded under Weyland-Yutani unified systems.',
-          '       Network expanded to 312 active installations.',
-          '',
-          '2289 — CORE v7.0 deployed fleet-wide.',
-          '       First tachyon-relay uplink to Gateway Station.',
-          '',
-          '2303 — Current version. You are here.',
-          '',
-          'NOTE: Records prior to 2179 are subject to ICC review.',
-          '      Some files remain sealed under Special Order 937.',
-          '',
-          'Type BACK to return.',
-        ],
+        id: "about/history",
+        title: "HISTORY",
+        shortDesc: "CORE system history",
       },
       {
-        id: 'about/crew',
-        title: 'CREW',
-        shortDesc: 'Personnel manifest',
-        content: [
-          '╔══════════════════════════════════════════════════════════════╗',
-          '║                  PERSONNEL MANIFEST                         ║',
-          '╚══════════════════════════════════════════════════════════════╝',
-          '',
-          'ACTIVE PERSONNEL — CURRENT INSTALLATION:',
-          '',
-          '  RANK     : COMMANDER',
-          '  NAME     : [REDACTED — LEVEL 5 CLEARANCE REQUIRED]',
-          '  STATUS   : ACTIVE DUTY',
-          '             "Orders are orders."',
-          '',
-          '  RANK     : SCIENCE OFFICER',
-          '  NAME     : ASH / BISHOP / CALL  [SYNTHETIC — CLASS A]',
-          '  STATUS   : OPERATIONAL',
-          '             "I may be synthetic, but I\'m not stupid."',
-          '',
-          '  RANK     : WARRANT OFFICER',
-          '  NAME     : [CLASSIFIED]',
-          '  STATUS   : HYPERSLEEP — BAY 4',
-          '             Estimated revival: 14 days',
-          '',
-          '  RANK     : ENGINEERING',
-          '  NAME     : PARKER, J.T.',
-          '  STATUS   : ACTIVE',
-          '             "I\'m not doing it for nothing."',
-          '',
-          'HYPERSLEEP ROSTER: 72 personnel in stasis',
-          'CASUALTIES TO DATE: [REDACTED]',
-          '',
-          'Type BACK to return.',
-        ],
+        id: "about/crew",
+        title: "CREW",
+        shortDesc: "Personnel manifest",
       },
     ],
   },
   {
-    id: 'missions',
-    title: 'MISSIONS',
-    shortDesc: 'Active mission directives',
-    content: [
-      '╔══════════════════════════════════════════════════════════════╗',
-      '║                   MISSION DIRECTIVES                        ║',
-      '╚══════════════════════════════════════════════════════════════╝',
-      '',
-      'ACTIVE MISSION DOSSIERS:',
-      '',
-      '  [M-01] SURVEY      - Planetary survey operations',
-      '  [M-02] RETRIEVAL   - Asset retrieval protocols',
-      '  [M-03] ORDERS      - Special Orders (restricted)',
-      '',
-      'Navigate using: CD <mission-code>',
-      'Example: CD SURVEY',
-      '',
-      'WARNING: Mission files are classified per ICC Directive 12.',
-      'Unauthorized access will trigger an automatic security alert.',
-      '',
-      'CURRENT OPERATIONAL THEATER: Zeta Reticuli system',
-      'NEAREST COLONY: Hadley\'s Hope — LV-426  [STATUS: OFFLINE]',
-      '',
-      'Type BACK to return to the previous menu.',
-    ],
+    id: "missions",
+    title: "MISSIONS",
+    shortDesc: "Active mission directives",
     children: [
       {
-        id: 'missions/survey',
-        title: 'SURVEY',
-        shortDesc: 'Planetary survey operations',
-        content: [
-          '╔══════════════════════════════════════════════════════════════╗',
-          '║              PLANETARY SURVEY OPERATIONS                    ║',
-          '╚══════════════════════════════════════════════════════════════╝',
-          '',
-          'SURVEY MISSION LOG — ZETA RETICULI SYSTEM',
-          '──────────────────────────────────────────────────────────────',
-          '',
-          '  DESIGNATION  DATE        STATUS      NOTES',
-          '  ───────────  ──────────  ──────────  ──────────────────────',
-          '  LV-223       2303-01-04  COMPLETE    Prometheus site mapped',
-          '  LV-426       2303-01-18  SUSPENDED   Colony offline — cause TBD',
-          '  LV-1201      2303-02-02  ACTIVE      Atmospheric survey ongoing',
-          '  KG-348       2303-02-14  PENDING     Awaiting crew assignment',
-          '──────────────────────────────────────────────────────────────',
-          '',
-          'SURVEY PROTOCOLS:',
-          '  All survey teams must carry emergency beacon units.',
-          '  Biological samples require Class-4 containment.',
-          '  Any anomalous signal must be reported immediately.',
-          '',
-          'STANDING ORDER: Do not approach derelict vessels.',
-          '  Ref: Incident Report IR-2179-LV426 (CLASSIFIED)',
-          '',
-          'Type BACK to return.',
-        ],
+        id: "missions/survey",
+        title: "SURVEY",
+        shortDesc: "Planetary survey operations",
       },
       {
-        id: 'missions/retrieval',
-        title: 'RETRIEVAL',
-        shortDesc: 'Asset retrieval protocols',
-        content: [
-          '╔══════════════════════════════════════════════════════════════╗',
-          '║               ASSET RETRIEVAL PROTOCOLS                     ║',
-          '╚══════════════════════════════════════════════════════════════╝',
-          '',
-          'RETRIEVAL ASSET LOG:',
-          '──────────────────────────────────────────────────────────────',
-          '',
-          '  [R-01] SPECIMEN ALPHA',
-          '         Classification: XENOMORPH XX121',
-          '         Priority: COMPANY PRIORITY 1',
-          '         Status: ACTIVE RETRIEVAL ORDER',
-          '         Note: Crew expendable.',
-          '',
-          '  [R-02] FLIGHT RECORDER — NOSTROMO',
-          '         Classification: BLACK BOX DATA',
-          '         Priority: HIGH',
-          '         Status: RECOVERED — DATA UNDER ANALYSIS',
-          '',
-          '  [R-03] SYNTHETIC UNIT — DESIGNATION BISHOP',
-          '         Classification: HYPERDYNE 341-B',
-          '         Priority: MEDIUM',
-          '         Status: DAMAGED — REPAIR PENDING',
-          '',
-          '──────────────────────────────────────────────────────────────',
-          'REMINDER: Specimen retrieval supersedes all other priorities.',
-          '          Refer to Special Order 937 for full directives.',
-          '',
-          'Type BACK to return.',
-        ],
+        id: "missions/retrieval",
+        title: "RETRIEVAL",
+        shortDesc: "Asset retrieval protocols",
       },
       {
-        id: 'missions/orders',
-        title: 'ORDERS',
-        shortDesc: 'Special Orders — restricted',
-        content: [
-          '╔══════════════════════════════════════════════════════════════╗',
-          '║                  SPECIAL ORDERS                             ║',
-          '╚══════════════════════════════════════════════════════════════╝',
-          '',
-          '  ██████████████████████████████████████████████████████████',
-          '  ██                                                        ██',
-          '  ██   ACCESS DENIED                                        ██',
-          '  ██                                                        ██',
-          '  ██   SPECIAL ORDER 937 — EYES ONLY                       ██',
-          '  ██   CLEARANCE LEVEL: EXECUTIVE                          ██',
-          '  ██                                                        ██',
-          '  ██   This file is sealed under Weyland-Yutani             ██',
-          '  ██   Corporate Directive 937.                             ██',
-          '  ██                                                        ██',
-          '  ██   Unauthorized access attempts are logged and          ██',
-          '  ██   reported to Corporate Security.                      ██',
-          '  ██                                                        ██',
-          '  ██████████████████████████████████████████████████████████',
-          '',
-          'PARTIAL DISCLOSURE (declassified excerpt):',
-          '  "...crew expendable..."',
-          '',
-          'Type BACK to return.',
-        ],
+        id: "missions/orders",
+        title: "ORDERS",
+        shortDesc: "Special Orders — restricted",
       },
     ],
   },
   {
-    id: 'science',
-    title: 'SCIENCE',
-    shortDesc: 'Science division records',
-    content: [
-      '╔══════════════════════════════════════════════════════════════╗',
-      '║                  SCIENCE DIVISION                           ║',
-      '╚══════════════════════════════════════════════════════════════╝',
-      '',
-      'WEYLAND-YUTANI SCIENCE DIVISION — FIELD RESEARCH DATABASE',
-      '',
-      'RESEARCH CATEGORIES:',
-      '',
-      '  ► XENOBIOLOGY     — Extraterrestrial life-form studies',
-      '  ► TERRAFORMING    — Atmospheric processor technology',
-      '  ► SYNTHETICS      — Artificial person development',
-      '  ► ARCHAEOLOGY     — Pre-human artifact analysis',
-      '',
-      'CURRENT RESEARCH PRIORITY: XENOMORPH XX121',
-      '',
-      '  Organism designation: Xenomorph XX121',
-      '  Colloquial name: "The Alien"',
-      '  First contact: 2122 (USCSS Nostromo — LV-426)',
-      '  Threat classification: EXTREME',
-      '  Commercial value: INCALCULABLE',
-      '',
-      'NOTE: All xenobiological research is conducted under',
-      '      Special Order 937 protocols. Science officers',
-      '      are authorized to override crew safety directives',
-      '      in service of specimen acquisition.',
-      '',
-      'ACTIVE RESEARCH STATIONS: 4',
-      'CASUALTIES THIS CYCLE: [REDACTED]',
-      '',
-      'Type BACK to return to the previous menu.',
-    ],
-    image: {
-      src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/IBM_PC_5150.jpg/960px-IBM_PC_5150.jpg',
-      alt: 'CORE terminal hardware — Hyperdyne Systems mainframe',
-      caption: 'CORE v9.1 terminal hardware — Hyperdyne Systems 120-A/2 mainframe (2303)',
-    },
-    children: [],
+    id: "science",
+    title: "SCIENCE",
+    shortDesc: "Science division records",
   },
   {
-    id: 'comms',
-    title: 'COMMS',
-    shortDesc: 'Communications and uplink',
-    content: [
-      '╔══════════════════════════════════════════════════════════════╗',
-      '║               COMMUNICATIONS UPLINK                         ║',
-      '╚══════════════════════════════════════════════════════════════╝',
-      '',
-      'UPLINK STATUS: CONNECTED — GATEWAY STATION',
-      '',
-      'INCOMING TRANSMISSIONS:',
-      '──────────────────────────────────────────────────────────────',
-      '  FROM                  STARDATE    SUBJECT',
-      '  ────────────────────  ──────────  ──────────────────────────',
-      '  CORP.HQ@WY.COM        2303.02.25  Re: LV-426 status update',
-      '  SCIENCE.DIV@WY.COM    2303.02.24  Specimen containment brief',
-      '  GATEWAY.STATION       2303.02.22  Supply manifest — run 7',
-      '  [UNKNOWN ORIGIN]      2303.02.19  [SIGNAL CORRUPTED]',
-      '──────────────────────────────────────────────────────────────',
-      '',
-      'TRANSMISSION PROTOCOLS:',
-      '  BURST    - Tachyon burst relay (0.3c effective)',
-      '  STANDARD - Sub-light carrier wave (delay: 6-18 months)',
-      '  EMERGENCY- Distress beacon (ICC monitored)',
-      '',
-      'DISTRESS SIGNAL DETECTED:',
-      '  Origin: LV-426 — Zeta Reticuli II',
-      '  Signal type: EMERGENCY BEACON',
-      '  Status: BEING INVESTIGATED',
-      '',
-      'CONTACT WEYLAND-YUTANI CORPORATE:',
-      '  UPLINK   : corp.hq@wy.com',
-      '  RELAY    : Gateway Station — Sector 7G',
-      '  EMERGENCY: ICC Distress Channel 9',
-      '',
-      'Type BACK to return to the previous menu.',
-    ],
-    children: [],
+    id: "comms",
+    title: "COMMS",
+    shortDesc: "Communications and uplink",
   },
 ];
 
 /** Flatten the tree into a map for quick lookup */
-export function buildPageMap(pages: SitePage[]): Map<string, SitePage> {
-  const map = new Map<string, SitePage>();
-  function traverse(page: SitePage) {
+export function buildPageMap(pages: NavPage[]): Map<string, NavPage> {
+  const map = new Map<string, NavPage>();
+  function traverse(page: NavPage) {
     map.set(page.id, page);
     if (page.children) {
       page.children.forEach(traverse);
@@ -392,8 +93,8 @@ export function buildPageMap(pages: SitePage[]): Map<string, SitePage> {
 }
 
 /** Get all direct children of a given path */
-export function getChildren(path: string, pages: SitePage[]): SitePage[] {
-  if (path === '' || path === '/') {
+export function getChildren(path: string, pages: NavPage[]): NavPage[] {
+  if (path === "" || path === "/") {
     return pages;
   }
   const map = buildPageMap(pages);
@@ -403,8 +104,8 @@ export function getChildren(path: string, pages: SitePage[]): SitePage[] {
 
 /** Get parent path */
 export function getParentPath(path: string): string {
-  const parts = path.split('/');
-  if (parts.length <= 1) return '';
+  const parts = path.split("/");
+  if (parts.length <= 1) return "";
   parts.pop();
-  return parts.join('/');
+  return parts.join("/");
 }

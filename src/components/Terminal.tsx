@@ -17,8 +17,9 @@ import {
   buildPageMap,
   getChildren,
   getParentPath,
-  type SitePage,
+  type NavPage,
 } from "@/lib/siteContent";
+import { loadPageContent } from "@/lib/contentLoader";
 
 interface TerminalLine {
   id: number;
@@ -155,17 +156,26 @@ export default function Terminal() {
     []
   );
 
-  /** Display a page's text content and optional image */
+  /**
+   * Display a page's content by fetching it from the API.
+   * Returns true if content was found and displayed, false otherwise.
+   */
   const showPage = useCallback(
-    (page: SitePage) => {
-      addLines(page.content);
-      if (page.image) {
+    async (page: NavPage): Promise<boolean> => {
+      const data = await loadPageContent(page.id);
+      if (!data) {
+        addLine(`CORE: Content not found for '${page.id}'.`, "error");
+        return false;
+      }
+      addLines(data.content);
+      if (data.image) {
         addLine("");
         addLine("── IMAGE ──────────────────────────────────────────────────────", "system");
-        addImage(page.image.src, page.image.alt, page.image.caption);
+        addImage(data.image.src, data.image.alt, data.image.caption);
         addLine("───────────────────────────────────────────────────────────────", "system");
       }
       addLine("");
+      return true;
     },
     [addLines, addLine, addImage]
   );
@@ -180,8 +190,8 @@ export default function Terminal() {
         setIsReady(true);
         const homePage = pageMap.get("home");
         if (homePage) {
-          setTimeout(() => {
-            showPage(homePage);
+          setTimeout(async () => {
+            await showPage(homePage);
           }, 300);
         }
       }, 0);
@@ -202,7 +212,7 @@ export default function Terminal() {
     }, delay);
 
     return () => clearTimeout(timer);
-  }, [isBooting, bootIndex, addLines, addLine, showPage]);
+  }, [isBooting, bootIndex, showPage]);
 
   // Play boot sound once
   useEffect(() => {
@@ -228,12 +238,12 @@ export default function Terminal() {
     return `CORE:\\${currentPath.toUpperCase().replace(/\//g, "\\")}\\>`;
   }, [currentPath]);
 
-  const getCurrentChildren = useCallback((): SitePage[] => {
+  const getCurrentChildren = useCallback((): NavPage[] => {
     return getChildren(currentPath, siteTree);
   }, [currentPath]);
 
   const processCommand = useCallback(
-    (raw: string) => {
+    async (raw: string) => {
       const trimmed = raw.trim();
       if (!trimmed) return;
 
@@ -354,7 +364,7 @@ export default function Terminal() {
             addLine(`Changed to: CORE:\\${match.id.toUpperCase().replace(/\//g, "\\")}`, "system");
             addLine(`  ${match.title} - ${match.shortDesc}`, "system");
             addLine("");
-            showPage(match);
+            await showPage(match);
           } else {
             playError();
             addLine(
@@ -371,7 +381,7 @@ export default function Terminal() {
           if (page) {
             playPageLoad();
             addLine("");
-            showPage(page);
+            await showPage(page);
           } else {
             playError();
             addLine("No content available for current location.", "error");
@@ -495,7 +505,7 @@ export default function Terminal() {
         const cmd = inputValue;
         setHistory((h) => (cmd.trim() ? [cmd, ...h.slice(0, 49)] : h));
         setHistoryIndex(-1);
-        processCommand(cmd);
+        void processCommand(cmd);
         setInputValue("");
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
