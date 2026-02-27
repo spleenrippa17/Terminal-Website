@@ -63,35 +63,40 @@ const HELP_TEXT = [
   "  BACK           - Go back to previous location",
   "  CLS            - Clear the screen",
   "  VER            - Show system version",
-  "  DATE           - Show current date/time",
+  "  DATE           - Show current stardate/time",
   "  ECHO <text>    - Print text to screen",
-  "  EXIT           - Disconnect from system",
+  "  EXIT           - Terminate session",
   "",
   "NAVIGATION TIPS:",
   "  Use UP/DOWN arrows to scroll command history",
   "  Press TAB to autocomplete commands",
   "  Type DIR to see what's available at any level",
   "",
+  "NOTE: All sessions are monitored per Standing Order 937.",
+  "",
 ];
 
 const BOOT_SEQUENCE = [
-  "RETRONET BIOS v2.10  Copyright (C) 1998 RETRONET Systems",
-  "640K Base Memory OK",
-  "Extended Memory: 8192K",
+  "WEYLAND-YUTANI CORPORATION",
+  "CORE v9.1 — Corporate Operations Resource Engine",
+  "Hyperdyne Systems 120-A/2 Mainframe",
   "",
-  "Detecting hardware...",
-  "  Sound Blaster 16 at I/O 220h, IRQ 5, DMA 1 ... OK",
-  "  Network adapter at I/O 300h, IRQ 10 ........... OK",
-  "  VGA display adapter ............................ OK",
+  "Initializing primary memory banks...",
+  "  256 TB primary storage ......................... OK",
+  "  4 PB cold storage array ........................ OK",
+  "  Tachyon relay uplink ........................... OK",
   "",
-  "Loading RETRONET.SYS...",
-  "Loading NETWORK.DRV...",
-  "Loading SOUND.DRV...",
+  "Loading CORE.SYS...",
+  "Loading UPLINK.DRV...",
+  "Loading SCIENCE.MOD...",
+  "Loading SPECIAL_ORDERS.ENC ..................... [RESTRICTED]",
   "",
-  "RETRONET v2.1 - Online Information System",
-  "Copyright (C) 1991-1998 RETRONET Systems. All rights reserved.",
+  "CORE v9.1 — Corporate Operations Resource Engine",
+  "Copyright (C) 2099-2303 Weyland-Yutani Corporation.",
+  "All rights reserved. Unauthorized access prosecuted.",
   "",
-  "Connecting to network... CONNECTED (9600 baud)",
+  "Uplink to Gateway Station... CONNECTED",
+  "Stardate: 2303.02.27  //  All systems nominal.",
   "",
   "Type HELP for available commands.",
   "Type DIR to see available sections.",
@@ -219,8 +224,8 @@ export default function Terminal() {
   }, []);
 
   const getPrompt = useCallback(() => {
-    if (currentPath === "") return "C:\\>";
-    return `C:\\${currentPath.toUpperCase().replace(/\//g, "\\")}\\>`;
+    if (currentPath === "") return "CORE:\\>";
+    return `CORE:\\${currentPath.toUpperCase().replace(/\//g, "\\")}\\>`;
   }, [currentPath]);
 
   const getCurrentChildren = useCallback((): SitePage[] => {
@@ -260,7 +265,7 @@ export default function Terminal() {
 
           addLine("");
           addLine(
-            `Directory of C:\\${currentPath.toUpperCase().replace(/\//g, "\\")}`,
+            `Directory of CORE:\\${currentPath.toUpperCase().replace(/\//g, "\\")}`,
             "system"
           );
           addLine("──────────────────────────────────────────────────────────────");
@@ -297,7 +302,7 @@ export default function Terminal() {
 
         case "CD": {
           if (!args) {
-            addLine(`Current directory: C:\\${currentPath.toUpperCase().replace(/\//g, "\\")}`, "system");
+            addLine(`Current directory: CORE:\\${currentPath.toUpperCase().replace(/\//g, "\\")}`, "system");
             break;
           }
 
@@ -314,7 +319,7 @@ export default function Terminal() {
               playSelect();
               const parentPage = parent ? pageMap.get(parent) : null;
               addLine(
-                `Changed to: C:\\${parent.toUpperCase().replace(/\//g, "\\")}`,
+                `Changed to: CORE:\\${parent.toUpperCase().replace(/\//g, "\\")}`,
                 "system"
               );
               if (parentPage) {
@@ -330,7 +335,7 @@ export default function Terminal() {
             setPathHistory((h) => [...h, currentPath]);
             setCurrentPath("");
             playSelect();
-            addLine("Changed to: C:\\", "system");
+            addLine("Changed to: CORE:\\", "system");
             break;
           }
 
@@ -346,14 +351,14 @@ export default function Terminal() {
             setPathHistory((h) => [...h, currentPath]);
             setCurrentPath(match.id);
             playPageLoad();
-            addLine(`Changed to: C:\\${match.id.toUpperCase().replace(/\//g, "\\")}`, "system");
+            addLine(`Changed to: CORE:\\${match.id.toUpperCase().replace(/\//g, "\\")}`, "system");
             addLine(`  ${match.title} - ${match.shortDesc}`, "system");
             addLine("");
             showPage(match);
           } else {
             playError();
             addLine(
-              `Bad command or file name: '${target}'`,
+              `CORE: Unknown path or access denied: '${target}'`,
               "error"
             );
             addLine("Type DIR to see available sections.", "error");
@@ -381,7 +386,7 @@ export default function Terminal() {
             setCurrentPath(prev);
             playSelect();
             addLine(
-              `Returned to: C:\\${prev.toUpperCase().replace(/\//g, "\\")}`,
+              `Returned to: CORE:\\${prev.toUpperCase().replace(/\//g, "\\")}`,
               "system"
             );
           } else {
@@ -394,9 +399,10 @@ export default function Terminal() {
         case "VER": {
           playSelect();
           addLine("");
-          addLine("RETRONET v2.1 - Online Information System", "system");
-          addLine("Copyright (C) 1991-1998 RETRONET Systems", "system");
-          addLine("MS-DOS Version 6.22", "system");
+          addLine("CORE v9.1 — Corporate Operations Resource Engine", "system");
+          addLine("Copyright (C) 2099-2303 Weyland-Yutani Corporation", "system");
+          addLine("Hyperdyne Systems 120-A/2 Mainframe", "system");
+          addLine("Build: 2303.01.14 — Security hardened release", "system");
           addLine("");
           break;
         }
@@ -404,9 +410,17 @@ export default function Terminal() {
         case "DATE": {
           playSelect();
           const now = new Date();
+          // Offset to year 2303: add (2303 - current_year) years
+          const yearOffset = 2303 - now.getFullYear();
+          const futureDate = new Date(now);
+          futureDate.setFullYear(now.getFullYear() + yearOffset);
+          const month = String(futureDate.getMonth() + 1).padStart(2, "0");
+          const day = String(futureDate.getDate()).padStart(2, "0");
+          const stardate = `${futureDate.getFullYear()}.${month}.${day}`;
           addLine("");
-          addLine(`Current date: ${now.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}`, "system");
-          addLine(`Current time: ${now.toLocaleTimeString("en-US", { hour12: false })}`, "system");
+          addLine(`Stardate: ${stardate}`, "system");
+          addLine(`Ship time: ${now.toLocaleTimeString("en-US", { hour12: false })} (synchronized)`, "system");
+          addLine(`Uplink: Gateway Station — CONNECTED`, "system");
           addLine("");
           break;
         }
@@ -423,23 +437,27 @@ export default function Terminal() {
 
         case "EXIT":
         case "QUIT":
-        case "BYE": {
+        case "LOGOUT": {
           playEnter();
           addLine("");
-          addLine("Thank you for using RETRONET.", "system");
-          addLine("Disconnecting...", "system");
+          addLine("Terminating CORE session...", "system");
+          addLine("Flushing session logs to uplink...", "system");
+          addLine("Uplink disconnected.", "system");
           addLine("");
-          addLine("NO CARRIER", "system");
+          addLine("WEYLAND-YUTANI CORPORATION", "system");
+          addLine('"Building Better Worlds."', "system");
           addLine("");
           setTimeout(() => {
-            addLine("Connection closed. Goodbye.", "system");
+            addLine("Session terminated. Goodbye, operative.", "system");
           }, 1500);
           break;
         }
 
         case "WHOAMI": {
           playSelect();
-          addLine("GUEST\\USER", "system");
+          addLine("OPERATIVE\\AUTHORIZED_USER", "system");
+          addLine("Clearance level: STANDARD", "system");
+          addLine("Note: Special Order 937 files require EXECUTIVE clearance.", "system");
           break;
         }
 
@@ -450,15 +468,14 @@ export default function Terminal() {
           } else {
             playSelect();
             addLine(`Reading file: ${args}`, "system");
-            addLine("File not found or access denied.", "error");
+            addLine("File not found or access denied. Clearance insufficient.", "error");
           }
           break;
         }
 
         default: {
           playError();
-          addLine(`'${cmd}' is not recognized as an internal or external command,`, "error");
-          addLine("operable program or batch file.", "error");
+          addLine(`CORE: '${cmd}' — command not recognized or access denied.`, "error");
           addLine("Type HELP for available commands.", "error");
           break;
         }
@@ -632,11 +649,11 @@ export default function Terminal() {
           color: "#00aa2a",
         }}
       >
-        <span>RETRONET v2.1</span>
+        <span>CORE v9.1 — W-Y CORP</span>
         <span>
           {currentPath
-            ? `C:\\${currentPath.toUpperCase().replace(/\//g, "\\")}`
-            : "C:\\"}
+            ? `CORE:\\${currentPath.toUpperCase().replace(/\//g, "\\")}`
+            : "CORE:\\"}
         </span>
         <span>
           {new Date().toLocaleTimeString("en-US", { hour12: false })}
