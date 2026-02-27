@@ -1,10 +1,10 @@
-# Active Context: Next.js Starter Template
+# Active Context: RETRONET DOS Terminal Website
 
 ## Current State
 
-**Template Status**: ✅ Ready for development
+**Project Status**: ✅ DOS-like terminal experience implemented
 
-The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. It's ready for AI-assisted expansion to build any type of application.
+The site is a fully functional DOS/BBS-style terminal web experience with CRT effects, a command parser, retro sounds, and navigable page hierarchy.
 
 ## Recently Completed
 
@@ -14,23 +14,60 @@ The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. I
 - [x] ESLint configuration
 - [x] Memory bank documentation
 - [x] Recipe system for common features
+- [x] DOS-like terminal UI (`src/components/Terminal.tsx`)
+- [x] CRT scanline + vignette + flicker effects (`src/app/globals.css`)
+- [x] Web Audio API retro sound engine (`src/lib/sounds.ts`)
+- [x] Site content hierarchy with 5 top-level sections (`src/lib/siteContent.ts`)
+- [x] Command parser: HELP, DIR, CD, VIEW, BACK, CLS, VER, DATE, ECHO, EXIT
+- [x] Boot sequence animation with progressive text reveal
+- [x] Command history (UP/DOWN arrows)
+- [x] TAB autocomplete for commands and section names
+- [x] Green-on-black phosphor glow text styling
 
 ## Current Structure
 
 | File/Directory | Purpose | Status |
 |----------------|---------|--------|
-| `src/app/page.tsx` | Home page | ✅ Ready |
-| `src/app/layout.tsx` | Root layout | ✅ Ready |
-| `src/app/globals.css` | Global styles | ✅ Ready |
+| `src/app/page.tsx` | Renders Terminal component | ✅ Done |
+| `src/app/layout.tsx` | Root layout (black bg, no fonts) | ✅ Done |
+| `src/app/globals.css` | CRT effects, DOS styling | ✅ Done |
+| `src/components/Terminal.tsx` | Main terminal UI + command parser | ✅ Done |
+| `src/lib/sounds.ts` | Web Audio API retro sound engine | ✅ Done |
+| `src/lib/siteContent.ts` | Page hierarchy data (5 sections) | ✅ Done |
 | `.kilocode/` | AI context & recipes | ✅ Ready |
+
+## Site Sections (navigable via CD command)
+
+- `HOME` — Welcome screen (shown on boot)
+- `ABOUT` — About the system
+  - `ABOUT/HISTORY` — System history
+  - `ABOUT/TEAM` — Development team
+- `SERVICES` — Available services
+  - `SERVICES/EMAIL` — Email inbox
+  - `SERVICES/BULLETIN` — Bulletin board
+  - `SERVICES/FILES` — File library
+- `PORTFOLIO` — Project showcase
+- `CONTACT` — Contact information
+
+## Sound Effects
+
+| Sound | Trigger |
+|-------|---------|
+| Key click | Any character typed |
+| Backspace | Backspace key |
+| Enter/confirm | Enter key |
+| Error buzz | Unknown command |
+| Select blip | Navigation commands |
+| Page load arpeggio | CD into a section |
+| Boot sequence | On first load |
+| Tab blip | TAB autocomplete |
 
 ## Current Focus
 
-The template is ready. Next steps depend on user requirements:
-
-1. What type of application to build
-2. What features are needed
-3. Design/branding preferences
+The DOS terminal experience is complete. Possible next steps:
+1. Add more content sections
+2. Add Easter eggs / hidden commands
+3. Add ANSI art to pages
 
 ## Quick Start Guide
 
