@@ -23,6 +23,12 @@ The site is a fully functional CORE (Corporate Operations Resource Engine) termi
 - [x] Command history (UP/DOWN arrows)
 - [x] TAB autocomplete for commands and section names
 - [x] Green-on-black phosphor glow text styling
+- [x] **Refactor: content migrated from inline siteContent.ts to individual .md files**
+  - `src/content/<id>.md` — one file per page, plain text + YAML frontmatter
+  - `src/app/api/content/[...slug]/route.ts` — server-side API reads files with gray-matter
+  - `src/lib/contentLoader.ts` — client fetch helper
+  - `src/lib/siteContent.ts` now navigation-only (NavPage interface, no content arrays)
+  - `src/components/Terminal.tsx` showPage() is now async, fetches on demand
 
 ## Current Structure
 
@@ -31,9 +37,12 @@ The site is a fully functional CORE (Corporate Operations Resource Engine) termi
 | `src/app/page.tsx` | Renders Terminal component | ✅ Done |
 | `src/app/layout.tsx` | Root layout (black bg, no fonts) | ✅ Done |
 | `src/app/globals.css` | CRT effects, DOS styling | ✅ Done |
-| `src/components/Terminal.tsx` | Main terminal UI + command parser | ✅ Done |
+| `src/app/api/content/[...slug]/route.ts` | Server API: reads .md files, returns content JSON | ✅ Done |
+| `src/components/Terminal.tsx` | Main terminal UI + async command parser | ✅ Done |
 | `src/lib/sounds.ts` | Web Audio API retro sound engine | ✅ Done |
-| `src/lib/siteContent.ts` | Page hierarchy data (5 sections) | ✅ Done |
+| `src/lib/siteContent.ts` | Navigation index only (NavPage, no content) | ✅ Done |
+| `src/lib/contentLoader.ts` | Client-side fetch helper for page content | ✅ Done |
+| `src/content/*.md` | Individual page content files (9 pages) | ✅ Done |
 | `.kilocode/` | AI context & recipes | ✅ Ready |
 
 ## Site Sections (navigable via CD command)
