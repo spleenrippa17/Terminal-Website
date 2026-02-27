@@ -8,6 +8,12 @@ export interface SitePage {
   title: string;
   shortDesc: string;
   content: string[];
+  /** Optional image shown below the text content. Will have CRT filter applied automatically. */
+  image?: {
+    src: string;
+    alt: string;
+    caption?: string;
+  };
   children?: SitePage[];
 }
 
@@ -308,6 +314,11 @@ export const siteTree: SitePage[] = [
       '',
       'Type BACK to return to the previous menu.',
     ],
+    image: {
+      src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/IBM_PC_5150.jpg/640px-IBM_PC_5150.jpg',
+      alt: 'IBM PC 5150 - the original IBM Personal Computer',
+      caption: 'IBM PC 5150 (1981) — the machine that started it all.',
+    },
     children: [],
   },
   {

@@ -23,7 +23,28 @@ import {
 interface TerminalLine {
   id: number;
   text: string;
-  type: "output" | "input" | "error" | "system" | "title";
+  type: "output" | "input" | "error" | "system" | "title" | "image";
+  /** Only used when type === "image" */
+  imageData?: {
+    src: string;
+    alt: string;
+    caption?: string;
+  };
+}
+
+/** Renders an image with automatic CRT phosphor-green filter + scanlines */
+function CrtImage({ src, alt, caption }: { src: string; alt: string; caption?: string }) {
+  return (
+    <div className="my-2 ml-2">
+      <div className="crt-image-wrapper" style={{ maxWidth: 480 }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} alt={alt} style={{ maxWidth: "100%", display: "block" }} />
+      </div>
+      {caption && (
+        <span className="crt-image-caption">{caption}</span>
+      )}
+    </div>
+  );
 }
 
 const pageMap = buildPageMap(siteTree);
@@ -114,6 +135,36 @@ export default function Terminal() {
     []
   );
 
+  const addImage = useCallback(
+    (src: string, alt: string, caption?: string) => {
+      setLines((prev) => [
+        ...prev,
+        {
+          id: Date.now() + Math.random(),
+          text: "",
+          type: "image",
+          imageData: { src, alt, caption },
+        },
+      ]);
+    },
+    []
+  );
+
+  /** Display a page's text content and optional image */
+  const showPage = useCallback(
+    (page: SitePage) => {
+      addLines(page.content);
+      if (page.image) {
+        addLine("");
+        addLine("── IMAGE ──────────────────────────────────────────────────────", "system");
+        addImage(page.image.src, page.image.alt, page.image.caption);
+        addLine("───────────────────────────────────────────────────────────────", "system");
+      }
+      addLine("");
+    },
+    [addLines, addLine, addImage]
+  );
+
   // Boot sequence
   useEffect(() => {
     if (!isBooting) return;
@@ -125,8 +176,7 @@ export default function Terminal() {
         const homePage = pageMap.get("home");
         if (homePage) {
           setTimeout(() => {
-            addLines(homePage.content);
-            addLine("");
+            showPage(homePage);
           }, 300);
         }
       }, 0);
@@ -147,7 +197,7 @@ export default function Terminal() {
     }, delay);
 
     return () => clearTimeout(timer);
-  }, [isBooting, bootIndex, addLines, addLine]);
+  }, [isBooting, bootIndex, addLines, addLine, showPage]);
 
   // Play boot sound once
   useEffect(() => {
@@ -299,8 +349,7 @@ export default function Terminal() {
             addLine(`Changed to: C:\\${match.id.toUpperCase().replace(/\//g, "\\")}`, "system");
             addLine(`  ${match.title} - ${match.shortDesc}`, "system");
             addLine("");
-            addLines(match.content);
-            addLine("");
+            showPage(match);
           } else {
             playError();
             addLine(
@@ -317,8 +366,7 @@ export default function Terminal() {
           if (page) {
             playPageLoad();
             addLine("");
-            addLines(page.content);
-            addLine("");
+            showPage(page);
           } else {
             playError();
             addLine("No content available for current location.", "error");
@@ -418,7 +466,7 @@ export default function Terminal() {
 
       addLine("");
     },
-    [addLine, addLines, currentPath, getPrompt, getCurrentChildren, pathHistory]
+    [addLine, addLines, showPage, currentPath, getPrompt, getCurrentChildren, pathHistory]
   );
 
   const handleKeyDown = useCallback(
@@ -503,20 +551,29 @@ export default function Terminal() {
         className="flex-1 overflow-y-auto p-4 pb-2"
         style={{ maxHeight: "calc(100vh - 60px)" }}
       >
-        {lines.map((line) => (
-          <div
-            key={line.id}
-            className={`text-sm leading-5 whitespace-pre ${getLineClass(line.type)}`}
-            style={{
-              textShadow:
-                line.type === "error"
-                  ? "0 0 8px rgba(255, 100, 100, 0.6)"
-                  : "0 0 8px rgba(0, 255, 65, 0.4), 0 0 16px rgba(0, 255, 65, 0.2)",
-            }}
-          >
-            {line.text || "\u00A0"}
-          </div>
-        ))}
+        {lines.map((line) =>
+          line.type === "image" && line.imageData ? (
+            <CrtImage
+              key={line.id}
+              src={line.imageData.src}
+              alt={line.imageData.alt}
+              caption={line.imageData.caption}
+            />
+          ) : (
+            <div
+              key={line.id}
+              className={`text-sm leading-5 whitespace-pre ${getLineClass(line.type)}`}
+              style={{
+                textShadow:
+                  line.type === "error"
+                    ? "0 0 8px rgba(255, 100, 100, 0.6)"
+                    : "0 0 8px rgba(0, 255, 65, 0.4), 0 0 16px rgba(0, 255, 65, 0.2)",
+              }}
+            >
+              {line.text || "\u00A0"}
+            </div>
+          )
+        )}
         <div ref={bottomRef} />
       </div>
 
