@@ -20,6 +20,8 @@ export interface NavPage {
   shortDesc: string;
   /** Child pages navigable via CD */
   children?: NavPage[];
+  /** Optional audio file path for audio entries */
+  audio?: string;
 }
 
 export const siteTree: NavPage[] = [
@@ -65,17 +67,39 @@ export const siteTree: NavPage[] = [
         title: "ORDERS",
         shortDesc: "Special Orders — restricted",
       },
+      {
+        id: "missions/briefing",
+        title: "BRIEFING.AU",
+        shortDesc: "Pre-mission audio briefing",
+        audio: "/audio/mission-briefing.mp3",
+      },
     ],
   },
   {
     id: "science",
     title: "SCIENCE",
     shortDesc: "Science division records",
+    children: [
+      {
+        id: "science/distress",
+        title: "DISTRESS.AU",
+        shortDesc: "Recovered distress signal",
+        audio: "/audio/distress-signal.mp3",
+      },
+    ],
   },
   {
     id: "comms",
     title: "COMMS",
     shortDesc: "Communications and uplink",
+    children: [
+      {
+        id: "comms/static",
+        title: "STATIC.AU",
+        shortDesc: "Deep space interference",
+        audio: "/audio/space-static.mp3",
+      },
+    ],
   },
 ];
 

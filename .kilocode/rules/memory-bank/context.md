@@ -29,6 +29,13 @@ The site is a fully functional CORE (Corporate Operations Resource Engine) termi
   - `src/lib/contentLoader.ts` — client fetch helper
   - `src/lib/siteContent.ts` now navigation-only (NavPage interface, no content arrays)
   - `src/components/Terminal.tsx` showPage() is now async, fetches on demand
+- [x] **Audio file playback support**
+  - `src/lib/audioPlayer.ts` — HTML5 Audio API wrapper for MP3/OGG playback
+  - `NavPage` interface extended with optional `audio` field for audio entries
+  - `PLAY <filename>` command to play audio files in current directory
+  - `STOP` command to halt playback
+  - Audio files appear in DIR listings with `[AUDIO]` marker
+  - Sample entries: `BRIEFING.AU` (missions), `DISTRESS.AU` (science), `STATIC.AU` (comms)
 
 ## Current Structure
 
@@ -50,13 +57,52 @@ The site is a fully functional CORE (Corporate Operations Resource Engine) termi
 - `HOME` — Welcome screen (shown on boot)
 - `ABOUT` — About the system
   - `ABOUT/HISTORY` — System history
-  - `ABOUT/TEAM` — Development team
-- `SERVICES` — Available services
-  - `SERVICES/EMAIL` — Email inbox
-  - `SERVICES/BULLETIN` — Bulletin board
-  - `SERVICES/FILES` — File library
-- `PORTFOLIO` — Project showcase
-- `CONTACT` — Contact information
+  - `ABOUT/CREW` — Personnel manifest
+- `MISSIONS` — Active mission directives
+  - `MISSIONS/SURVEY` — Planetary survey operations
+  - `MISSIONS/RETRIEVAL` — Asset retrieval protocols
+  - `MISSIONS/ORDERS` — Special Orders — restricted
+  - `MISSIONS/BRIEFING.AU` — Pre-mission audio briefing [AUDIO]
+- `SCIENCE` — Science division records
+  - `SCIENCE/DISTRESS.AU` — Recovered distress signal [AUDIO]
+- `COMMS` — Communications and uplink
+  - `COMMS/STATIC.AU` — Deep space interference [AUDIO]‌
+
+## Available Commands
+
+| Command | Description |
+|---------|-------------|
+| `HELP` | Show available commands |
+| `DIR` | List items in current directory (shows [AUDIO] for audio files) |
+| `CD <name>` | Navigate into a section |
+| `CD ..` | Go up one level |
+| `CD /` | Return to root |
+| `VIEW` | View current page content |
+| `BACK` | Go back to previous location |
+| `CLS` | Clear the screen |
+| `VER` | Show system version |
+| `DATE` | Show current stardate/time |
+| `ECHO <text>` | Print text to screen |
+| `PLAY <file>` | Play audio file (e.g., `PLAY BRIEFING.AU`) |
+| `STOP` | Stop playing audio |
+| `EXIT` | Terminate session |‌
+
+## Adding Audio Files
+
+To add a new audio file to any section:
+
+1. Add the MP3/OGG file to the `public/audio/` directory
+2. Add an entry to `src/lib/siteContent.ts` in the appropriate section's `children` array:
+   ```typescript
+   {
+     id: "section/filename",
+     title: "FILENAME.AU",
+     shortDesc: "Description of the audio",
+     audio: "/audio/your-file.mp3",
+   }
+   ```
+3. The file will appear in DIR listings with `[AUDIO]` marker
+4. Users can play it with `PLAY FILENAME.AU`
 
 ## Sound Effects
 

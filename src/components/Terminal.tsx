@@ -13,6 +13,11 @@ import {
   resumeAudio,
 } from "@/lib/sounds";
 import {
+  playAudioFile,
+  stopAudio,
+  isPlaying,
+} from "@/lib/audioPlayer";
+import {
   siteTree,
   buildPageMap,
   getChildren,
@@ -66,12 +71,15 @@ const HELP_TEXT = [
   "  VER            - Show system version",
   "  DATE           - Show current stardate/time",
   "  ECHO <text>    - Print text to screen",
+  "  PLAY <file>    - Play audio file",
+  "  STOP           - Stop playing audio",
   "  EXIT           - Terminate session",
   "",
   "NAVIGATION TIPS:",
   "  Use UP/DOWN arrows to scroll command history",
   "  Press TAB to autocomplete commands",
   "  Type DIR to see what's available at any level",
+  "  Audio files are marked with [AUDIO] in listings",
   "",
   "NOTE: All sessions are monitored per Standing Order 937.",
   "",
@@ -290,7 +298,15 @@ export default function Terminal() {
           } else {
             children.forEach((child) => {
               const hasChildren = child.children && child.children.length > 0;
-              const tag = hasChildren ? "<DIR>" : "     ";
+              const isAudio = !!child.audio;
+              let tag: string;
+              if (isAudio) {
+                tag = "[AUDIO]";
+              } else if (hasChildren) {
+                tag = "<DIR>  ";
+              } else {
+                tag = "       ";
+              }
               const name = child.title.padEnd(10);
               addLine(`  ${tag}  ${name}  ${child.shortDesc}`);
             });
@@ -483,6 +499,54 @@ export default function Terminal() {
           break;
         }
 
+        case "PLAY": {
+          if (!args) {
+            addLine("Usage: PLAY <filename>", "error");
+            playError();
+            addLine("Type DIR to see available audio files (marked with [AUDIO]).", "system");
+            break;
+          }
+
+          const targetFile = args.trim().toUpperCase();
+          const children = getCurrentChildren();
+          const audioEntry = children.find(
+            (c) =>
+              c.audio &&
+              (c.title.toUpperCase() === targetFile ||
+                c.id.split("/").pop()?.toUpperCase() === targetFile)
+          );
+
+          if (!audioEntry) {
+            playError();
+            addLine(`CORE: Audio file '${args}' not found in current directory.`, "error");
+            addLine("Type DIR to see available audio files.", "system");
+          } else {
+            playSelect();
+            addLine(`Loading audio: ${audioEntry.title}...`, "system");
+            try {
+              void playAudioFile(audioEntry.audio!);
+              addLine(`[▶ PLAYING] ${audioEntry.title}`, "system");
+              addLine(`  ${audioEntry.shortDesc}`, "system");
+              addLine("Type STOP to halt playback.", "system");
+            } catch {
+              playError();
+              addLine("CORE: Failed to load audio file.", "error");
+            }
+          }
+          break;
+        }
+
+        case "STOP": {
+          if (isPlaying()) {
+            stopAudio();
+            playSelect();
+            addLine("[■ STOPPED] Audio playback halted.", "system");
+          } else {
+            addLine("No audio is currently playing.", "system");
+          }
+          break;
+        }
+
         default: {
           playError();
           addLine(`CORE: '${cmd}' — command not recognized or access denied.`, "error");
@@ -531,7 +595,7 @@ export default function Terminal() {
         // Autocomplete
         const partial = inputValue.toUpperCase();
         const allCommands = [
-          "HELP", "DIR", "CD", "VIEW", "BACK", "CLS", "VER", "DATE", "ECHO", "EXIT",
+          "HELP", "DIR", "CD", "VIEW", "BACK", "CLS", "VER", "DATE", "ECHO", "PLAY", "STOP", "EXIT",
         ];
         const children = getCurrentChildren();
         const childNames = children.map((c) => c.title);
