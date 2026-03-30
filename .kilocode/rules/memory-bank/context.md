@@ -8,6 +8,11 @@ The site is a fully functional CORE (Corporate Operations Resource Engine) termi
 
 ## Recently Completed
 
+- [x] **Dynamic stardate**: Stardate now displays as current date + 277 years
+  - Added `src/lib/utils.ts` with `getStardate()` function
+  - Updated boot sequence (Terminal.tsx) to use dynamic stardate
+  - Updated home.md content to use `{{STARDATE}}` placeholder
+  - showPage() now replaces placeholder with actual stardate
 - [x] Base Next.js 16 setup with App Router
 - [x] TypeScript configuration with strict mode
 - [x] Tailwind CSS 4 integration
@@ -177,3 +182,4 @@ export async function GET() {
 | Date | Changes |
 |------|---------|
 | Initial | Template created with base setup |
+| Today | Added dynamic stardate (current date + 277 years) |

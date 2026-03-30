@@ -25,6 +25,7 @@ import {
   type NavPage,
 } from "@/lib/siteContent";
 import { loadPageContent } from "@/lib/contentLoader";
+import { getStardate } from "@/lib/utils";
 
 interface TerminalLine {
   id: number;
@@ -105,7 +106,7 @@ const BOOT_SEQUENCE = [
   "All rights reserved. Unauthorized access prosecuted.",
   "",
   "Uplink to Gateway Station... CONNECTED",
-  "Stardate: 2303.02.27  //  All systems nominal.",
+  `Stardate: ${getStardate()}  //  All systems nominal.`,
   "",
   "Type HELP for available commands.",
   "Type DIR to see available sections.",
@@ -175,7 +176,10 @@ export default function Terminal() {
         addLine(`CORE: Content not found for '${page.id}'.`, "error");
         return false;
       }
-      addLines(data.content);
+      const processedContent = data.content.map((line) =>
+        line.replace("{{STARDATE}}", getStardate())
+      );
+      addLines(processedContent);
       if (data.image) {
         addLine("");
         addLine("── IMAGE ──────────────────────────────────────────────────────", "system");

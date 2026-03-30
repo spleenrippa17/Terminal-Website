@@ -20,7 +20,7 @@ SYSTEM STATUS:
   [OK] Uplink to Gateway Station: CONNECTED
   [OK] Science division sub-routines: RUNNING
 
-CURRENT STARDATE: 2303.02.27  //  SHIP TIME: SYNCHRONIZED
+CURRENT STARDATE: {{STARDATE}}  //  SHIP TIME: SYNCHRONIZED
 
 Type HELP for a list of available commands.
 Type DIR to see available sections.
