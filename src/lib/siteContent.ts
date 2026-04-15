@@ -135,6 +135,48 @@ export const siteTree: NavPage[] = [
     id: "harden",
     title: "HARDEN",
     shortDesc: "Defense protocols and hardening procedures",
+    children: [
+      {
+        id: "harden/working",
+        title: "WORKING",
+        shortDesc: "Active defense working files",
+      },
+      {
+        id: "harden/oldmail",
+        title: "OLDMAIL",
+        shortDesc: "Archived communications",
+      },
+      {
+        id: "harden/keep",
+        title: "KEEP",
+        shortDesc: "Permanent defense records",
+      },
+      {
+        id: "harden/jnl",
+        title: "JNL",
+        shortDesc: "Defense journal and logs",
+      },
+      {
+        id: "harden/misc",
+        title: "MISC",
+        shortDesc: "Miscellaneous defense files",
+      },
+      {
+        id: "harden/tmp",
+        title: "TMP",
+        shortDesc: "Temporary defense data",
+      },
+      {
+        id: "harden/do_not_file",
+        title: "DO_NOT_FILE",
+        shortDesc: "Pending review items",
+      },
+      {
+        id: "harden/burn",
+        title: "BURN",
+        shortDesc: "High-priority destruction orders",
+      },
+    ],
   },
 ];
 
