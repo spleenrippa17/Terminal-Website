@@ -157,6 +157,38 @@ export const siteTree: NavPage[] = [
     id: "intel",
     title: "INTEL",
     shortDesc: "Intelligence reports and analysis",
+    children: [
+      {
+        id: "intel/assess",
+        title: "ASSESS",
+        shortDesc: "Threat and risk assessments",
+      },
+      {
+        id: "intel/dossier",
+        title: "DOSSIER",
+        shortDesc: "Personnel and entity files",
+      },
+      {
+        id: "intel/sigint",
+        title: "SIGINT",
+        shortDesc: "Signals intelligence",
+      },
+      {
+        id: "intel/humint",
+        title: "HUMINT",
+        shortDesc: "Human intelligence sources",
+      },
+      {
+        id: "intel/cntrint",
+        title: "CNTRINT",
+        shortDesc: "Counter-intelligence operations",
+      },
+      {
+        id: "intel/redcell",
+        title: "REDCELL",
+        shortDesc: "Red team analysis and opposition research",
+      },
+    ],
   },
   {
     id: "harden",
