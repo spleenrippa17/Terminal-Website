@@ -126,6 +126,16 @@ export const siteTree: NavPage[] = [
     title: "OPERATIONS",
     shortDesc: "Operational briefings and logs",
   },
+  {
+    id: "intel",
+    title: "INTEL",
+    shortDesc: "Intelligence reports and analysis",
+  },
+  {
+    id: "harden",
+    title: "HARDEN",
+    shortDesc: "Defense protocols and hardening procedures",
+  },
 ];
 
 /** Flatten the tree into a map for quick lookup */
