@@ -101,6 +101,31 @@ export const siteTree: NavPage[] = [
       },
     ],
   },
+  {
+    id: "hound-wire",
+    title: "HOUND WIRE",
+    shortDesc: "Active reconnaissance feeds",
+  },
+  {
+    id: "threat-board",
+    title: "THREAT BOARD",
+    shortDesc: "Known hazards and threat assessments",
+  },
+  {
+    id: "quartermaster",
+    title: "QUARTERMASTER",
+    shortDesc: "Equipment and supply inventory",
+  },
+  {
+    id: "camp-mess",
+    title: "CAMP / MESS BOARD",
+    shortDesc: "Crew quarters and provisions",
+  },
+  {
+    id: "operations",
+    title: "OPERATIONS",
+    shortDesc: "Operational briefings and logs",
+  },
 ];
 
 /** Flatten the tree into a map for quick lookup */
