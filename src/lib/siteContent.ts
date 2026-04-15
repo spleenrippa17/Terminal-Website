@@ -125,6 +125,33 @@ export const siteTree: NavPage[] = [
     id: "operations",
     title: "OPERATIONS",
     shortDesc: "Operational briefings and logs",
+    children: [
+      {
+        id: "operations/current-ops",
+        title: "CURRENT OPS",
+        shortDesc: "Active operational status",
+      },
+      {
+        id: "operations/ao-status",
+        title: "AO STATUS",
+        shortDesc: "Area of operations status",
+      },
+      {
+        id: "operations/aar",
+        title: "AAR",
+        shortDesc: "After action reports",
+      },
+      {
+        id: "operations/targets",
+        title: "TARGETS",
+        shortDesc: "Designated target information",
+      },
+      {
+        id: "operations/cmdnotes",
+        title: "CMDNOTES",
+        shortDesc: "Commanders notes and directives",
+      },
+    ],
   },
   {
     id: "intel",
